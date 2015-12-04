@@ -15,23 +15,47 @@ public class Splitable : MonoBehaviour {
 	
 	}
 
-    void split(){
-        Vector3 planeNormal = new Vector3(1,1,1);//temp values
-        Vector3 planePoint = new Vector3(0,0,0);
+    void split(Plane plane){
 
-        ArrayList vertices = new ArrayList();
-        vertices.AddRange(mesh.vertices);
+        Vector3[] vertices = mesh.vertices;
         int[] triangles = mesh.triangles;
 
-        ArrayList leftTriangles = new ArrayList();
-        ArrayList rightTriangles = new ArrayList();
+        ArrayList posTriangles = new ArrayList();
+        ArrayList negTriangles = new ArrayList();
 
         ArrayList seamVertices = new ArrayList();
         ArrayList seamTriangles = new ArrayList();
 
-        int index = 0;
+        for (int i = 0; i < triangles.Length; i += 3)
+        {
+            bool side1 = plane.GetSide(vertices[triangles[i]]);
+            bool side2 = plane.GetSide(vertices[triangles[i + 1]]);
+            bool side3 = plane.GetSide(vertices[triangles[i + 2]]);
 
-        while(index < vertices.Count)
+            if (side1 == side2 == side3 == true)
+            {
+                posTriangles.Add(triangles[i]);
+                posTriangles.Add(triangles[i + 1]);
+                posTriangles.Add(triangles[i + 2]);
+            }
+            else if (side1 == side2 == side3 == false)
+            {
+                negTriangles.Add(triangles[i]);
+                negTriangles.Add(triangles[i + 1]);
+                negTriangles.Add(triangles[i + 2]);
+            }
+            else
+            {
+                //find odd boolean value
+                //find vertice with odd boolean value
+                //find rays between odd vertice and other vertices
+                //find intersection between rays and plane
+                //add intersection to end of vertices array
+
+            }
+        }
+
+        /*while(index < vertices.Count)
         for (int i = 0; i < triangles.Length; i += 3)
         {
             float vertice1 = Vector3.Dot((Vector3)vertices[i] - planePoint, planeNormal);
@@ -90,7 +114,7 @@ public class Splitable : MonoBehaviour {
 
             }
             index += 3;
-        }
+        }*/
     }
 
     Vector3 findNewVertex(Vector3 linePoint, Vector3 line, Vector3 planePoint, Vector3 planeNormal)
