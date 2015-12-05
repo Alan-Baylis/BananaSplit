@@ -1,5 +1,11 @@
 ﻿using UnityEngine;
 
+/*
+Class written to generate a simple convex hull from a mesh
+Useful for MeshColliders which require that the mesh be < 256 triangles
+
+    Credit to mathmos_ http://answers.unity3d.com/questions/380233/generating-a-convex-hull.html
+*/
 public class SimpleConvex
 {
     Mesh mesh;
