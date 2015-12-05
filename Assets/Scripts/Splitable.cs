@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
-public class Splitable : MonoBehaviour {
-
+public class Splitable : MonoBehaviour
+{
     private Mesh mesh;
+    new private Transform transform;
     private Vector3[] vertices;
     private int verticesIndex;//the index of the next vertex to be added
     private int[] triangles;
@@ -16,15 +16,17 @@ public class Splitable : MonoBehaviour {
 
     private List<int> trackSplitEdges = new List<int>();//holds index of first vertex on edge, then second, then new vertex that splits edge
 
-	// Use this for initialization
-	private void Start()
+    // Use this for initialization
+    private void Start()
     {
-       mesh = gameObject.GetComponent<MeshFilter>().mesh;
-       PlaneGenerator.OnGeneration += Split;
-       vertices = mesh.vertices;
-       verticesIndex = vertices.Length;
-       triangles = mesh.triangles;
-	}
+        mesh = gameObject.GetComponent<MeshFilter>().mesh;
+        transform = gameObject.GetComponent<Transform>();
+
+        PlaneGenerator.OnGeneration += Split;
+        vertices = mesh.vertices;
+        verticesIndex = vertices.Length;
+        triangles = mesh.triangles;
+    }
 
     private void Split(Plane worldPlane)
     {
@@ -230,6 +232,7 @@ public class Splitable : MonoBehaviour {
     {
         var split = new GameObject();
         split.transform.position = transform.position;
+        split.transform.parent = transform.parent;
 
         Mesh mesh = new Mesh();
         mesh.vertices = verts;
