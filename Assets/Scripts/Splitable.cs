@@ -213,8 +213,9 @@ public class Splitable : MonoBehaviour {
             uvs[i] = new Vector2(doneVertices[i].x, doneVertices[i].z);
         }
 
-        if (posTriangles.Count != 0)//dont bother creating a gameobject if there are no triangles
+        if (posTriangles.Count != 0 && negTriangles.Count != 0)//dont bother creating a gameobject if there are no triangles
         {
+            //in front of plane
             GameObject split1 = new GameObject();
             split1.transform.position = transform.position;
             Mesh mesh1 = new Mesh();
@@ -230,10 +231,8 @@ public class Splitable : MonoBehaviour {
             MeshRenderer mr1 = split1.GetComponent<MeshRenderer>();
             mr1.material = GetComponent<MeshRenderer>().material;
             split1.AddComponent<Splitable>();
-        }
-        else return;
-        if (negTriangles.Count != 0)
-        {
+
+            //behind plane
             GameObject split2 = new GameObject();
             split2.transform.position = transform.position;
             Mesh mesh2 = new Mesh();
