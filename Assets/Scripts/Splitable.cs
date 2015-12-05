@@ -46,10 +46,40 @@ public class Splitable : MonoBehaviour {
             }
             else
             {
-                //find odd boolean value
+                //find odd boolean value(expression found using karnaugh map)
+                bool odd = (!side1 && !side2) || (!side1 && !side3) || (!side2 && !side3);
                 //find vertice with odd boolean value
-                //find rays between odd vertice and other vertices
-                //find intersection between rays and plane
+                Vector3 direction1, direction2;
+                Vector3 vertice1, vertice2;
+                if (side1 == odd)
+                {
+                    direction1 = Vector3.Normalize(vertices[triangles[i + 1]] - vertices[triangles[i]]);
+                    direction2 = Vector3.Normalize(vertices[triangles[i + 2]] - vertices[triangles[i]]);
+                    float distance1, distance2;
+                    plane.Raycast(new Ray(vertices[triangles[i]], direction1), out distance1);
+                    plane.Raycast(new Ray(vertices[triangles[i]], direction2), out distance2);
+                    vertice1 = vertices[triangles[i]] + distance1 * direction1;
+                    vertice2 = vertices[triangles[i]] + distance2 * direction2;
+                }
+                else if (side2 == odd)
+                {
+                    direction1 = Vector3.Normalize(vertices[triangles[i]] - vertices[triangles[i + 1]]);
+                    direction2 = Vector3.Normalize(vertices[triangles[i + 2]] - vertices[triangles[i + 1]]);
+                    float distance1, distance2;
+                    plane.Raycast(new Ray(vertices[triangles[i + 1]], direction1), out distance1);
+                    plane.Raycast(new Ray(vertices[triangles[i + 1]], direction2), out distance2);
+                    vertice1 = vertices[triangles[i + 1]] + distance1 * direction1;
+                    vertice2 = vertices[triangles[i + 1]] + distance2 * direction2;
+                }else
+                {
+                    direction1 = Vector3.Normalize(vertices[triangles[i]] - vertices[triangles[i + 2]]);
+                    direction2 = Vector3.Normalize(vertices[triangles[i + 1]] - vertices[triangles[i + 2]]);
+                    float distance1, distance2;
+                    plane.Raycast(new Ray(vertices[triangles[i + 2]], direction1), out distance1);
+                    plane.Raycast(new Ray(vertices[triangles[i + 2]], direction2), out distance2);
+                    vertice1 = vertices[triangles[i + 2]] + distance1 * direction1;
+                    vertice2 = vertices[triangles[i + 2]] + distance2 * direction2;
+                }
                 //add intersection to end of vertices array
 
             }
