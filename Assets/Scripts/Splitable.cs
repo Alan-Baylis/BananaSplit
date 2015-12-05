@@ -153,7 +153,7 @@ public class Splitable : MonoBehaviour {
                         posTriangles.Add(vertice1);
                     }
                 }
-                //now average all seam vertices to find center of inner face
+                /*//now average all seam vertices to find center of inner face
                 float x = 0;
                 float y = 0;
                 float z = 0;
@@ -168,10 +168,21 @@ public class Splitable : MonoBehaviour {
                 Vector3 center = new Vector3(x / n, y / n, z / n);
                 int index = verticesIndex++;
                 seamVertices.Add(center);
-                //Now create triangle interior triangles
-
+                //Now create triangle interior triangles*/
             }
-        }    
+        }
+        ArrayList newVertices = new ArrayList();
+        newVertices.AddRange(vertices);
+        newVertices.AddRange(seamVertices);
+        Vector3[] doneVertices = (Vector3[])newVertices.ToArray(typeof(Vector3));
+
+        Mesh posSide = new Mesh();
+        posSide.vertices = doneVertices;
+        posSide.triangles = (int[])posTriangles.ToArray(typeof(int));
+
+        Mesh negSide = new Mesh();
+        posSide.vertices = doneVertices;
+        posSide.triangles = (int[])negTriangles.ToArray(typeof(int));
     }
 
     int findNewVertex(int vertex1, int vertex2, Plane plane)//returns index of new vertice, creates new vertice if it doesnt already exist
