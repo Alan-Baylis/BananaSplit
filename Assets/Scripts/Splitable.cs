@@ -11,8 +11,13 @@ public class Splitable : MonoBehaviour
     private int verticesIndex;//the index of the next vertex to be added
     private int[] triangles;
 
+    private List<Vector2> uv = new List<Vector2>();
+
     private List<int> posTriangles = new List<int>();
     private List<int> negTriangles = new List<int>();
+
+    private List<Vector3> posNormals = new List<Vector3>();
+    private List<Vector3> negNormals = new List<Vector3>();
 
     private List<Vector3> seamVertices = new List<Vector3>();
 
@@ -28,6 +33,8 @@ public class Splitable : MonoBehaviour
         vertices = mesh.vertices;
         verticesIndex = vertices.Length;
         triangles = mesh.triangles;
+        uv.Add(new Vector2(0, 0)); // center vertex
+        uv.AddRange(mesh.uv); // pre-existing vertices
     }
 
     private void Split(Plane worldPlane, Vector3 lineStart, Vector3 lineEnd, int casts)
@@ -41,7 +48,13 @@ public class Splitable : MonoBehaviour
             return;//arbitrary value
 
         Plane plane = new Plane();
-        plane.SetNormalAndPosition(worldPlane.normal, worldPlane.normal * distance);//ignores model rotation
+        Vector3 newNormal = transform.rotation * worldPlane.normal;
+        plane.SetNormalAndPosition(worldPlane.normal, newNormal * distance);//ignores model rotation
+
+        posNormals.Add(-newNormal);
+        negNormals.Add(newNormal);
+        posNormals.AddRange(mesh.normals);
+        negNormals.AddRange(mesh.normals);
 
         for (int i = 0; i < triangles.Length; i += 3)
         {
@@ -212,17 +225,12 @@ public class Splitable : MonoBehaviour
         newVertices.AddRange(vertices); // index 1 to vertices.length
         newVertices.AddRange(seamVertices); // then add the new seam vertices
         Vector3[] doneVertices = newVertices.ToArray();
-
-        Vector2[] uvs = new Vector2[doneVertices.Length];//might be why mesh is black
-        for (int i = 0; i < uvs.Length; i++)
-        {
-            uvs[i] = new Vector2(doneVertices[i].x, doneVertices[i].z);
-        }
+        Vector2[] uvs = uv.ToArray();
 
         if (posTriangles.Count != 0 && negTriangles.Count != 0)//dont bother creating a gameobject if there are no triangles
         {
-            CreateNewSplit(doneVertices, posTriangles.ToArray(), uvs);
-            CreateNewSplit(doneVertices, negTriangles.ToArray(), uvs);
+            CreateNewSplit(doneVertices, posTriangles.ToArray(), uvs, posNormals.ToArray());
+            CreateNewSplit(doneVertices, negTriangles.ToArray(), uvs, negNormals.ToArray());
         }
         else
         {
@@ -234,17 +242,19 @@ public class Splitable : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void CreateNewSplit(Vector3[] verts, int[] tris, Vector2[] uvs)
+    void CreateNewSplit(Vector3[] verts, int[] tris, Vector2[] uvs, Vector3[] normals)
     {
         var split = new GameObject();
         split.transform.position = transform.position;
+        split.transform.rotation = transform.rotation;
         split.transform.parent = transform.parent;
 
         Mesh mesh = new Mesh();
         mesh.vertices = verts;
         mesh.triangles = tris;
         mesh.uv = uvs;
-        mesh.RecalculateNormals();
+        //mesh.RecalculateNormals();
+        mesh.normals = normals;
         mesh.colors = this.mesh.colors;
         mesh.Optimize();
 
@@ -282,6 +292,20 @@ public class Splitable : MonoBehaviour
         plane.Raycast(new Ray(vertices[vertex1], direction), out distance);
         Vector3 newVertex = vertices[vertex1] + distance * direction;
         seamVertices.Add(newVertex);
+
+        //generate new uv coordinates
+        Vector2 uv1 = uv[vertex1 + 1];
+        Vector2 uv2 = uv[vertex2 + 1];
+        Vector2 uv3 = Vector2.Lerp(uv1, uv2, distance / Vector3.Distance(vertices[vertex2], vertices[vertex1]));
+        uv.Add(uv3);
+
+        //generate new normals
+        Vector3 normal1 = posNormals[vertex1 + 1];
+        Vector3 normal2 = posNormals[vertex2 + 1];
+        Vector3 normal3 = Vector3.Lerp(normal1, normal2, distance / Vector3.Distance(vertices[vertex2], vertices[vertex1]));
+        posNormals.Add(normal3);
+        negNormals.Add(normal3);
+
         //add second before first because next time we check trackSplitEdges, the second vertex will be the first and vice versa
         trackSplitEdges.Add(vertex2); trackSplitEdges.Add(vertex1); trackSplitEdges.Add(verticesIndex);
         return verticesIndex++;
