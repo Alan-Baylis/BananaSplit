@@ -4,30 +4,35 @@ using System.Collections.Generic;
 
 public class Splitable : MonoBehaviour {
 
-    Mesh mesh;
-    Vector3[] vertices;
-    int verticesIndex;//the index of the next vertice to be added
-    int[] triangles;
+    private Mesh mesh;
+    private Vector3[] vertices;
+    private int verticesIndex;//the index of the next vertex to be added
+    private int[] triangles;
 
-    ArrayList posTriangles = new ArrayList();
-    ArrayList negTriangles = new ArrayList();
+    private List<int> posTriangles = new List<int>();
+    private List<int> negTriangles = new List<int>();
 
-    ArrayList seamVertices = new ArrayList();
+    private List<Vector3> seamVertices = new List<Vector3>();
 
-    ArrayList trackSplitEdges = new ArrayList();//holds index of first vertice on edge, then second, then new vertice that splits edge
+    private List<int> trackSplitEdges = new List<int>();//holds index of first vertex on edge, then second, then new vertice that splits edge
 
 	// Use this for initialization
-	void Start () {
-       mesh  = gameObject.GetComponent<MeshFilter>().mesh;
-       PlaneGenerator.OnGeneration += split;
+	private void Start()
+    {
+       mesh = gameObject.GetComponent<MeshFilter>().mesh;
+       PlaneGenerator.OnGeneration += Split;
        vertices = mesh.vertices;
        verticesIndex = vertices.Length;
        triangles = mesh.triangles;
 	}
 
-    void split(Plane worldPlane){
+    private void Split(Plane worldPlane)
+    {
         float distance = worldPlane.GetDistanceToPoint(transform.position);
-        if (distance > 2.0f) return;//arbitrary value
+
+        if (distance > 2.0f)
+            return;//arbitrary value
+
         Plane plane = new Plane();
         plane.SetNormalAndPosition(worldPlane.normal, worldPlane.normal * distance);//ignores model rotation
 
@@ -188,18 +193,18 @@ public class Splitable : MonoBehaviour {
         int n = seamVertices.Count;
         for (int j = 0; j < n; j++)
         {
-            Vector3 current = (Vector3)seamVertices[j];
+            Vector3 current = seamVertices[j];
             x += current.x;
             y += current.y;
             z += current.z;
         }
         Vector3 center = new Vector3(x / n, y / n, z / n);
 
-        ArrayList newVertices = new ArrayList();
-        newVertices.Add(center);//at index 0
-        newVertices.AddRange(vertices);// index 1 to vertices.length
-        newVertices.AddRange(seamVertices);// then add the new seam vertices
-        Vector3[] doneVertices = (Vector3[])newVertices.ToArray(typeof(Vector3));
+        var newVertices = new List<Vector3>();
+        newVertices.Add(center); // at index 0
+        newVertices.AddRange(vertices); // index 1 to vertices.length
+        newVertices.AddRange(seamVertices); // then add the new seam vertices
+        Vector3[] doneVertices = newVertices.ToArray();
 
         Vector2[] uvs = new Vector2[doneVertices.Length];//might be why mesh is black
         for (int i = 0; i < uvs.Length; i++)
@@ -209,11 +214,15 @@ public class Splitable : MonoBehaviour {
 
         if (posTriangles.Count != 0 && negTriangles.Count != 0)//dont bother creating a gameobject if there are no triangles
         {
-            CreateNewSplit(doneVertices, posTriangles.ToArray(typeof(int)) as int[], uvs);
-            CreateNewSplit(doneVertices, negTriangles.ToArray(typeof(int)) as int[], uvs);
+            CreateNewSplit(doneVertices, posTriangles.ToArray(), uvs);
+            CreateNewSplit(doneVertices, negTriangles.ToArray(), uvs);
         }
-        else return;
-        PlaneGenerator.OnGeneration -= split;
+        else
+        {
+            return;
+        }
+
+        PlaneGenerator.OnGeneration -= Split;
         Destroy(gameObject);
     }
 
@@ -251,9 +260,9 @@ public class Splitable : MonoBehaviour {
         //check if new vertice already exists
         for (int i = 0; i < trackSplitEdges.Count; i += 3)
         {
-            if (vertex1 == (int)trackSplitEdges[i] && vertex2 == (int)trackSplitEdges[i + 1])
+            if (vertex1 == trackSplitEdges[i] && vertex2 == trackSplitEdges[i + 1])
             {
-                int seamVertice = (int)trackSplitEdges[i + 2];
+                int seamVertice = trackSplitEdges[i + 2];
                 trackSplitEdges.RemoveRange(i, 3);// since an edge is only used twice it can be removed after it is used the second time
                 return seamVertice;
             }
