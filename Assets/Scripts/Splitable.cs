@@ -131,9 +131,9 @@ public class Splitable : MonoBehaviour {
                         posTriangles.Add(vertices[i + 2]);  //                 /  \
                         posTriangles.Add(vertice1);         //        vertice1/____\vertice2
                         posTriangles.Add(vertice2);         //               /   _-'\
-                                                            //   vertices[i]/_.-'____\vertices[i+2] Negative Side
+                                                            //   vertices[i]/_.-'____\vertices[i+1] Negative Side
                         negTriangles.Add(vertices[i]);
-                        negTriangles.Add(vertices[i + 2]);
+                        negTriangles.Add(vertices[i + 1]);
                         negTriangles.Add(vertice2);
 
                         negTriangles.Add(vertices[i]);
