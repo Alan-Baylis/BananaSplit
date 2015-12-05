@@ -18,6 +18,7 @@ public class Splitable : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
        mesh  = gameObject.GetComponent<MeshFilter>().mesh;
+       PlaneGenerator.OnGeneration += split;
        vertices = mesh.vertices;
        verticesIndex = vertices.Length;
        triangles = mesh.triangles;
@@ -29,19 +30,20 @@ public class Splitable : MonoBehaviour {
 	}
 
     void split(Plane plane){
+        print(plane.normal);
         for (int i = 0; i < triangles.Length; i += 3)
         {
             bool side1 = plane.GetSide(vertices[triangles[i]]);
             bool side2 = plane.GetSide(vertices[triangles[i + 1]]);
             bool side3 = plane.GetSide(vertices[triangles[i + 2]]);
 
-            if (side1 == side2 == side3 == true)
+            if (side1 == true && side2 == true && side3 == true)
             {
                 posTriangles.Add(triangles[i]);
                 posTriangles.Add(triangles[i + 1]);
                 posTriangles.Add(triangles[i + 2]);
             }
-            else if (side1 == side2 == side3 == false)
+            else if (side1 == false && side2 == false && side3 == false)
             {
                 negTriangles.Add(triangles[i]);
                 negTriangles.Add(triangles[i + 1]);
@@ -176,13 +178,49 @@ public class Splitable : MonoBehaviour {
         newVertices.AddRange(seamVertices);
         Vector3[] doneVertices = (Vector3[])newVertices.ToArray(typeof(Vector3));
 
-        Mesh posSide = new Mesh();
+        /*Mesh posSide = new Mesh();
         posSide.vertices = doneVertices;
         posSide.triangles = (int[])posTriangles.ToArray(typeof(int));
 
         Mesh negSide = new Mesh();
         posSide.vertices = doneVertices;
-        posSide.triangles = (int[])negTriangles.ToArray(typeof(int));
+        posSide.triangles = (int[])negTriangles.ToArray(typeof(int));*/
+
+        GameObject split1 = new GameObject();
+        GameObject split2 = new GameObject();
+
+        split1.transform.position = transform.position;
+        split2.transform.position = transform.position;
+
+        Mesh mesh1 = new Mesh();
+        Mesh mesh2 = new Mesh();
+
+        split1.AddComponent<MeshFilter>();
+        split2.AddComponent<MeshFilter>();
+        split1.GetComponent<MeshFilter>().mesh = mesh1;
+        split2.GetComponent<MeshFilter>().mesh = mesh2;
+
+        mesh1.vertices = doneVertices;
+        mesh2.vertices = doneVertices;
+
+        mesh1.uv = mesh.uv;
+        mesh2.uv = mesh.uv;
+
+        mesh1.normals = mesh.normals;
+        mesh2.normals = mesh.normals;
+
+        mesh1.triangles = posTriangles.ToArray(typeof(int)) as int[];
+        mesh2.triangles = negTriangles.ToArray(typeof(int)) as int[];
+        split1.AddComponent<MeshRenderer>();
+        split2.AddComponent<MeshRenderer>();
+        MeshRenderer mr = GetComponent<MeshRenderer>();
+        MeshRenderer mr1 = split1.GetComponent<MeshRenderer>();
+        MeshRenderer mr2 = split2.GetComponent<MeshRenderer>();
+        mr1.material = mr.material;
+        mr2.material = mr.material;
+        split1.AddComponent<Splitable>();
+        split2.AddComponent<Splitable>();
+        Destroy(gameObject);
     }
 
     int findNewVertex(int vertex1, int vertex2, Plane plane)//returns index of new vertice, creates new vertice if it doesnt already exist
