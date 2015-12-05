@@ -58,25 +58,103 @@ public class Splitable : MonoBehaviour {
                 {
                     vertice1 = findNewVertex(triangles[i], triangles[i + 1], plane);
                     vertice2 = findNewVertex(triangles[i], triangles[i + 2], plane);
+                    if (side1 == true)
+                    {                                       //      vertices[i] /\                  Positive Side
+                        posTriangles.Add(vertices[i]);      //                 /  \
+                        posTriangles.Add(vertice1);         //        vertice2/____\vertice1
+                        posTriangles.Add(vertice2);         //               /   _-'\
+                                                            // vertices[i+2]/_.-'____\vertices[i+1] Negative Side
+                        negTriangles.Add(vertices[i + 1]);
+                        negTriangles.Add(vertices[i + 2]);
+                        negTriangles.Add(vertice1);
 
+                        negTriangles.Add(vertices[i + 2]);
+                        negTriangles.Add(vertice2);
+                        negTriangles.Add(vertice1);
+                    }
+                    else
+                    {                                       //      vertices[i] /\                  Negative Side
+                        negTriangles.Add(vertices[i]);      //                 /  \
+                        negTriangles.Add(vertice1);         //        vertice2/____\vertice1
+                        negTriangles.Add(vertice2);         //               /   _-'\
+                                                            // vertices[i+2]/_.-'____\vertices[i+1] Positive Side
+                        posTriangles.Add(vertices[i + 1]);
+                        posTriangles.Add(vertices[i + 2]);
+                        posTriangles.Add(vertice1);
+
+                        posTriangles.Add(vertices[i + 2]);
+                        posTriangles.Add(vertice2);
+                        posTriangles.Add(vertice1);
+                    }
                 }
                 else if (side2 == odd)
                 {
                     vertice1 = findNewVertex(triangles[i + 1], triangles[i + 2], plane);
                     vertice2 = findNewVertex(triangles[i + 1], triangles[i], plane);
+                    if (side2 == true)
+                    {                                       //    vertices[i+1] /\                  Positive Side
+                        posTriangles.Add(vertices[i + 1]);  //                 /  \
+                        posTriangles.Add(vertice1);         //        vertice2/____\vertice1
+                        posTriangles.Add(vertice2);         //               /   _-'\
+                                                            //   vertices[i]/_.-'____\vertices[i+2] Negative Side
+                        negTriangles.Add(vertices[i + 2]);
+                        negTriangles.Add(vertices[i]);
+                        negTriangles.Add(vertice1);
+
+                        negTriangles.Add(vertices[i]);
+                        negTriangles.Add(vertice2);
+                        negTriangles.Add(vertice1);
+                    }
+                    else
+                    {                                       //    vertices[i+1] /\                  Negative Side
+                        negTriangles.Add(vertices[i + 1]);  //                 /  \
+                        negTriangles.Add(vertice1);         //        vertice2/____\vertice1
+                        negTriangles.Add(vertice2);         //               /   _-'\
+                                                            //   vertices[i]/_.-'____\vertices[i+2] Positive Side
+                        posTriangles.Add(vertices[i + 2]);
+                        posTriangles.Add(vertices[i]);
+                        posTriangles.Add(vertice1);
+
+                        posTriangles.Add(vertices[i]);
+                        posTriangles.Add(vertice2);
+                        posTriangles.Add(vertice1);
+                    }
                 }
                 else
                 {
                     vertice1 = findNewVertex(triangles[i + 2], triangles[i], plane);
                     vertice2 = findNewVertex(triangles[i + 2], triangles[i + 1], plane);
+                    if (side2 == true)
+                    {                                       //    vertices[i+2] /\                  Positive Side
+                        posTriangles.Add(vertices[i + 2]);  //                 /  \
+                        posTriangles.Add(vertice1);         //        vertice2/____\vertice1
+                        posTriangles.Add(vertice2);         //               /   _-'\
+                                                            // vertices[i+1]/_.-'____\vertices[i] Negative Side
+                        negTriangles.Add(vertices[i]);
+                        negTriangles.Add(vertices[i + 1]);
+                        negTriangles.Add(vertice1);
+
+                        negTriangles.Add(vertices[i + 1]);
+                        negTriangles.Add(vertice2);
+                        negTriangles.Add(vertice1);
+                    }
+                    else
+                    {                                       //    vertices[i+2] /\                  Negative Side
+                        negTriangles.Add(vertices[i + 2]);  //                 /  \
+                        negTriangles.Add(vertice1);         //        vertice2/____\vertice1
+                        negTriangles.Add(vertice2);         //               /   _-'\
+                                                            // vertices[i+1]/_.-'____\vertices[i] Positive Side
+                        posTriangles.Add(vertices[i]);
+                        posTriangles.Add(vertices[i + 1]);
+                        posTriangles.Add(vertice1);
+
+                        posTriangles.Add(vertices[i + 1]);
+                        posTriangles.Add(vertice2);
+                        posTriangles.Add(vertice1);
+                    }
                 }
-                
-                //add intersection to end of vertices array
-
             }
-        }
-
-        
+        }    
     }
 
     int findNewVertex(int vertex1, int vertex2, Plane plane)//returns index of new vertice, creates new vertice if it doesnt already exist
