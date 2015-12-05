@@ -24,11 +24,6 @@ public class Splitable : MonoBehaviour {
        verticesIndex = vertices.Length;
        triangles = mesh.triangles;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
     void split(Plane worldPlane){
         float distance = worldPlane.GetDistanceToPoint(transform.position);
@@ -199,7 +194,6 @@ public class Splitable : MonoBehaviour {
             z += current.z;
         }
         Vector3 center = new Vector3(x / n, y / n, z / n);
-        int index = verticesIndex++;
 
         ArrayList newVertices = new ArrayList();
         newVertices.Add(center);//at index 0
