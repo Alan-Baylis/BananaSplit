@@ -215,60 +215,41 @@ public class Splitable : MonoBehaviour {
 
         if (posTriangles.Count != 0 && negTriangles.Count != 0)//dont bother creating a gameobject if there are no triangles
         {
-            //in front of plane
-            GameObject split1 = new GameObject();
-            split1.transform.position = transform.position;
-            Mesh mesh1 = new Mesh();
-            split1.AddComponent<MeshFilter>();
-            split1.GetComponent<MeshFilter>().mesh = mesh1;
-            mesh1.vertices = doneVertices;
-            mesh1.uv = uvs;
-            mesh1.RecalculateNormals();
-            mesh1.colors = mesh.colors;
-            mesh1.triangles = posTriangles.ToArray(typeof(int)) as int[];
-            mesh1.Optimize();
-            split1.AddComponent<MeshRenderer>();
-            MeshRenderer mr1 = split1.GetComponent<MeshRenderer>();
-            mr1.material = GetComponent<MeshRenderer>().material;
-            split1.AddComponent<Splitable>();
-            var convex = new SimpleConvex(mesh1);
-            var simpleMesh1 = convex.BuildSimplifiedConvexMesh();
-            var col1 = split1.AddComponent<MeshCollider>();
-            col1.sharedMesh = simpleMesh1;
-            col1.convex = true;
-            split1.AddComponent<Rigidbody>();
-
-            //behind plane
-            GameObject split2 = new GameObject();
-            split2.transform.position = transform.position;
-            Mesh mesh2 = new Mesh();
-            split2.AddComponent<MeshFilter>();
-            split2.GetComponent<MeshFilter>().mesh = mesh2;
-            mesh2.vertices = doneVertices;
-            mesh2.uv = uvs;
-            mesh2.RecalculateNormals();
-            mesh2.colors = mesh.colors;
-            mesh2.triangles = negTriangles.ToArray(typeof(int)) as int[];
-            mesh2.Optimize();
-            split2.AddComponent<MeshRenderer>();
-            MeshRenderer mr2 = split2.GetComponent<MeshRenderer>();
-            mr2.material = GetComponent<MeshRenderer>().material;
-            split2.AddComponent<Splitable>();
-            convex = new SimpleConvex(mesh2);
-            var simpleMesh2 = convex.BuildSimplifiedConvexMesh();
-            var col2 = split2.AddComponent<MeshCollider>();
-            col2.sharedMesh = simpleMesh2;
-            col2.convex = true;
-            split2.AddComponent<Rigidbody>();
-
-            var go = new GameObject();
-            var filter = go.AddComponent<MeshFilter>();
-            filter.mesh = simpleMesh2;
-            go.AddComponent<MeshRenderer>();
+            CreateNewSplit(doneVertices, posTriangles.ToArray(typeof(int)) as int[], uvs);
+            CreateNewSplit(doneVertices, negTriangles.ToArray(typeof(int)) as int[], uvs);
         }
         else return;
         PlaneGenerator.OnGeneration -= split;
         Destroy(gameObject);
+    }
+
+    void CreateNewSplit(Vector3[] verts, int[] tris, Vector2[] uvs)
+    {
+        var split = new GameObject();
+        split.transform.position = transform.position;
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = verts;
+        mesh.triangles = tris;
+        mesh.uv = uvs;
+        mesh.RecalculateNormals();
+        mesh.colors = this.mesh.colors;
+        mesh.Optimize();
+
+        split.AddComponent<MeshFilter>().mesh = mesh;
+
+        var rend = split.AddComponent<MeshRenderer>();
+        rend.material = GetComponent<MeshRenderer>().material;
+
+        split.AddComponent<Splitable>();
+
+        var convex = new SimpleConvex(mesh);
+        var simpleMesh1 = convex.BuildSimplifiedConvexMesh();
+        var collider = split.AddComponent<MeshCollider>();
+        collider.sharedMesh = simpleMesh1;
+        collider.convex = true;
+
+        split.AddComponent<Rigidbody>();
     }
 
     int findNewVertex(int vertex1, int vertex2, Plane plane)//returns index of new vertice, creates new vertice if it doesnt already exist
