@@ -3,6 +3,9 @@ using System.Collections;
 
 public class PlaneGenerator : MonoBehaviour {
 
+	public delegate void Generate(Plane plane);
+	public static event Generate OnGeneration;
+
     public bool showDrawnLines;
 	public bool debug;
 
@@ -73,6 +76,8 @@ public class PlaneGenerator : MonoBehaviour {
 		if (debug) {
 			test ();
 		}
+
+		OnGeneration(plane);
 	}
 
 	void test(){
