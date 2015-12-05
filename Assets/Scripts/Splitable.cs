@@ -29,25 +29,31 @@ public class Splitable : MonoBehaviour {
 	
 	}
 
-    void split(Plane plane){
-        print(plane.normal);
+    void split(Plane worldPlane){
+        float distance = worldPlane.GetDistanceToPoint(transform.position);
+        Plane plane = new Plane();
+        plane.SetNormalAndPosition(worldPlane.normal, worldPlane.normal * distance);//ignores model rotation
+
         for (int i = 0; i < triangles.Length; i += 3)
         {
-            bool side1 = plane.GetSide(vertices[triangles[i]]);
-            bool side2 = plane.GetSide(vertices[triangles[i + 1]]);
-            bool side3 = plane.GetSide(vertices[triangles[i + 2]]);
+            int i1 = triangles[i];
+            int i2 = triangles[i + 1];
+            int i3 = triangles[i + 2];
+            bool side1 = plane.GetSide(vertices[i1]);
+            bool side2 = plane.GetSide(vertices[i2]);
+            bool side3 = plane.GetSide(vertices[i3]);
 
             if (side1 == true && side2 == true && side3 == true)
             {
-                posTriangles.Add(triangles[i]);
-                posTriangles.Add(triangles[i + 1]);
-                posTriangles.Add(triangles[i + 2]);
+                posTriangles.Add(i1);
+                posTriangles.Add(i2);
+                posTriangles.Add(i3);
             }
             else if (side1 == false && side2 == false && side3 == false)
             {
-                negTriangles.Add(triangles[i]);
-                negTriangles.Add(triangles[i + 1]);
-                negTriangles.Add(triangles[i + 2]);
+                negTriangles.Add(i1);
+                negTriangles.Add(i2);
+                negTriangles.Add(i3);
             }
             else
             {
@@ -58,99 +64,99 @@ public class Splitable : MonoBehaviour {
                 int vertice1, vertice2;
                 if (side1 == odd)
                 {
-                    vertice1 = findNewVertex(triangles[i], triangles[i + 1], plane);
-                    vertice2 = findNewVertex(triangles[i], triangles[i + 2], plane);
+                    vertice1 = findNewVertex(i1, i2, plane);
+                    vertice2 = findNewVertex(i1, i3, plane);
                     if (side1 == true)
-                    {                                       //      vertices[i] /\                  Positive Side
-                        posTriangles.Add(vertices[i]);      //                 /  \
+                    {                                       //               i1 /\                  Positive Side
+                        posTriangles.Add(i1);               //                 /  \
                         posTriangles.Add(vertice1);         //        vertice1/____\vertice2
                         posTriangles.Add(vertice2);         //               /   _-'\
-                                                            // vertices[i+1]/_.-'____\vertices[i+2] Negative Side
-                        negTriangles.Add(vertices[i + 1]);
-                        negTriangles.Add(vertices[i + 2]);
+                                                            //            i2/_.-'____\i3            Negative Side
+                        negTriangles.Add(i2);
+                        negTriangles.Add(i3);
                         negTriangles.Add(vertice2);
 
-                        negTriangles.Add(vertices[i + 1]);
+                        negTriangles.Add(i2);
                         negTriangles.Add(vertice2);
                         negTriangles.Add(vertice1);
                     }
                     else
-                    {                                       //      vertices[i] /\                  Negative Side
-                        negTriangles.Add(vertices[i]);      //                 /  \
+                    {                                       //               i1 /\                  Negative Side
+                        negTriangles.Add(i1);               //                 /  \
                         negTriangles.Add(vertice1);         //        vertice1/____\vertice2
                         negTriangles.Add(vertice2);         //               /   _-'\
-                                                            // vertices[i+1]/_.-'____\vertices[i+2] Positive Side
-                        posTriangles.Add(vertices[i + 1]);
-                        posTriangles.Add(vertices[i + 2]);
+                                                            //            i2/_.-'____\i3            Positive Side
+                        posTriangles.Add(i2);
+                        posTriangles.Add(i3);
                         posTriangles.Add(vertice2);
 
-                        posTriangles.Add(vertices[i + 1]);
+                        posTriangles.Add(i2);
                         posTriangles.Add(vertice2);
                         posTriangles.Add(vertice1);
                     }
                 }
                 else if (side2 == odd)
                 {
-                    vertice1 = findNewVertex(triangles[i + 1], triangles[i + 2], plane);
-                    vertice2 = findNewVertex(triangles[i + 1], triangles[i], plane);
+                    vertice1 = findNewVertex(i2, i3, plane);
+                    vertice2 = findNewVertex(i2, i1, plane);
                     if (side2 == true)
-                    {                                       //    vertices[i+1] /\                  Positive Side
-                        posTriangles.Add(vertices[i + 1]);  //                 /  \
+                    {                                       //               i2 /\                  Positive Side
+                        posTriangles.Add(i2);               //                 /  \
                         posTriangles.Add(vertice1);         //        vertice1/____\vertice2
                         posTriangles.Add(vertice2);         //               /   _-'\
-                                                            // vertices[i+2]/_.-'____\vertices[i]   Negative Side
-                        negTriangles.Add(vertices[i + 2]);
-                        negTriangles.Add(vertices[i]);
+                                                            //            i3/_.-'____\i1            Negative Side
+                        negTriangles.Add(i3);
+                        negTriangles.Add(i1);
                         negTriangles.Add(vertice2);
 
-                        negTriangles.Add(vertices[i+2]);
+                        negTriangles.Add(i3);
                         negTriangles.Add(vertice2);
                         negTriangles.Add(vertice1);
                     }
                     else
-                    {                                       //    vertices[i+1] /\                  Negative Side
-                        negTriangles.Add(vertices[i + 1]);  //                 /  \
+                    {                                       //               i2 /\                  Negative Side
+                        negTriangles.Add(i2);               //                 /  \
                         negTriangles.Add(vertice1);         //        vertice1/____\vertice2
                         negTriangles.Add(vertice2);         //               /   _-'\
-                                                            // vertices[i+2]/_.-'____\vertices[i]   Positive Side
-                        posTriangles.Add(vertices[i + 2]);
-                        posTriangles.Add(vertices[i]);
+                                                            //            i3/_.-'____\i1            Positive Side
+                        posTriangles.Add(i3);
+                        posTriangles.Add(i1);
                         posTriangles.Add(vertice2);
 
-                        posTriangles.Add(vertices[i+2]);
+                        posTriangles.Add(i3);
                         posTriangles.Add(vertice2);
                         posTriangles.Add(vertice1);
                     }
                 }
                 else
                 {
-                    vertice1 = findNewVertex(triangles[i + 2], triangles[i], plane);
-                    vertice2 = findNewVertex(triangles[i + 2], triangles[i + 1], plane);
-                    if (side2 == true)
-                    {                                       //    vertices[i+2] /\                  Positive Side
-                        posTriangles.Add(vertices[i + 2]);  //                 /  \
+                    vertice1 = findNewVertex(i3, i1, plane);
+                    vertice2 = findNewVertex(i3, i2, plane);
+                    if (side3 == true)
+                    {                                       //               i3 /\                  Positive Side
+                        posTriangles.Add(i3);               //                 /  \
                         posTriangles.Add(vertice1);         //        vertice1/____\vertice2
                         posTriangles.Add(vertice2);         //               /   _-'\
-                                                            //   vertices[i]/_.-'____\vertices[i+1] Negative Side
-                        negTriangles.Add(vertices[i]);
-                        negTriangles.Add(vertices[i + 1]);
+                                                            //            i1/_.-'____\i2            Negative Side
+                        negTriangles.Add(i1);
+                        negTriangles.Add(i2);
                         negTriangles.Add(vertice2);
 
-                        negTriangles.Add(vertices[i]);
+                        negTriangles.Add(i1);
                         negTriangles.Add(vertice2);
                         negTriangles.Add(vertice1);
                     }
                     else
-                    {                                       //    vertices[i+2] /\                  Negative Side
-                        negTriangles.Add(vertices[i + 2]);  //                 /  \
+                    {                                       //               i3 /\                  Negative Side
+                        negTriangles.Add(i3);               //                 /  \
                         negTriangles.Add(vertice1);         //        vertice1/____\vertice2
                         negTriangles.Add(vertice2);         //               /   _-'\
-                                                            //   vertices[i]/_.-'____\vertices[i+1] Positive Side
-                        posTriangles.Add(vertices[i]);
-                        posTriangles.Add(vertices[i + 1]);
+                                                            //            i1/_.-'____\i2            Positive Side
+                        posTriangles.Add(i1);
+                        posTriangles.Add(i2);
                         posTriangles.Add(vertice2);
 
-                        posTriangles.Add(vertices[i]);
+                        posTriangles.Add(i1);
                         posTriangles.Add(vertice2);
                         posTriangles.Add(vertice1);
                     }
@@ -178,14 +184,6 @@ public class Splitable : MonoBehaviour {
         newVertices.AddRange(seamVertices);
         Vector3[] doneVertices = (Vector3[])newVertices.ToArray(typeof(Vector3));
 
-        /*Mesh posSide = new Mesh();
-        posSide.vertices = doneVertices;
-        posSide.triangles = (int[])posTriangles.ToArray(typeof(int));
-
-        Mesh negSide = new Mesh();
-        posSide.vertices = doneVertices;
-        posSide.triangles = (int[])negTriangles.ToArray(typeof(int));*/
-
         GameObject split1 = new GameObject();
         GameObject split2 = new GameObject();
 
@@ -203,11 +201,11 @@ public class Splitable : MonoBehaviour {
         mesh1.vertices = doneVertices;
         mesh2.vertices = doneVertices;
 
-        mesh1.uv = mesh.uv;
-        mesh2.uv = mesh.uv;
+        /*mesh1.uv = mesh.uv;
+        mesh2.uv = mesh.uv;*/
 
-        mesh1.normals = mesh.normals;
-        mesh2.normals = mesh.normals;
+        mesh1.RecalculateNormals();
+        mesh2.RecalculateNormals();
 
         mesh1.triangles = posTriangles.ToArray(typeof(int)) as int[];
         mesh2.triangles = negTriangles.ToArray(typeof(int)) as int[];
@@ -231,7 +229,7 @@ public class Splitable : MonoBehaviour {
             if (vertex1 == (int)trackSplitEdges[i] && vertex2 == (int)trackSplitEdges[i + 1])
             {
                 int seamVertice = (int)trackSplitEdges[i + 2];
-                trackSplitEdges.RemoveRange(i, 3);
+                trackSplitEdges.RemoveRange(i, 3);// since an edge is only used twice it can be removed after it is used the second time
                 return seamVertice;
             }
         }
