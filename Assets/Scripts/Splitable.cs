@@ -38,7 +38,7 @@ public class Splitable : MonoBehaviour {
 
         for (int i = 0; i < triangles.Length; i += 3)
         {
-            int i1 = triangles[i];
+            int i1 = triangles[i];//index 1, 2 and 3 of vertices
             int i2 = triangles[i + 1];
             int i3 = triangles[i + 2];
             bool side1 = plane.GetSide(vertices[i1]);
@@ -47,7 +47,7 @@ public class Splitable : MonoBehaviour {
 
             if (side1 == true && side2 == true && side3 == true)
             {
-                posTriangles.Add(i1 + 1); //first index is reserved for interior face middle vertice so every indice is incrementewd by 1
+                posTriangles.Add(i1 + 1); //first index is reserved for interior face middle vertice so every index is incremented by 1
                 posTriangles.Add(i2 + 1);
                 posTriangles.Add(i3 + 1);
             }
@@ -163,7 +163,7 @@ public class Splitable : MonoBehaviour {
                         posTriangles.Add(vertice1 + 1);
                     }
                 }
-                if (odd)
+                if (odd == true)
                 {
                     //add inner triangles
                     posTriangles.Add(vertice1 + 1);
@@ -202,18 +202,18 @@ public class Splitable : MonoBehaviour {
         int index = verticesIndex++;
 
         ArrayList newVertices = new ArrayList();
-        newVertices.Add(center);
-        newVertices.AddRange(vertices);
-        newVertices.AddRange(seamVertices);
+        newVertices.Add(center);//at index 0
+        newVertices.AddRange(vertices);// index 1 to vertices.length
+        newVertices.AddRange(seamVertices);// then add the new seam vertices
         Vector3[] doneVertices = (Vector3[])newVertices.ToArray(typeof(Vector3));
 
-        Vector2[] uvs = new Vector2[doneVertices.Length];
+        Vector2[] uvs = new Vector2[doneVertices.Length];//might be why mesh is black
         for (int i = 0; i < uvs.Length; i++)
         {
             uvs[i] = new Vector2(doneVertices[i].x, doneVertices[i].z);
         }
 
-        if (posTriangles.Count != 0)
+        if (posTriangles.Count != 0)//dont bother creating a gameobject if there are no triangles
         {
             GameObject split1 = new GameObject();
             split1.transform.position = transform.position;
@@ -231,6 +231,7 @@ public class Splitable : MonoBehaviour {
             mr1.material = GetComponent<MeshRenderer>().material;
             split1.AddComponent<Splitable>();
         }
+        else return;
         if (negTriangles.Count != 0)
         {
             GameObject split2 = new GameObject();
@@ -249,6 +250,7 @@ public class Splitable : MonoBehaviour {
             mr2.material = GetComponent<MeshRenderer>().material;
             split2.AddComponent<Splitable>();
         }
+        else return;
         PlaneGenerator.OnGeneration -= split;
         Destroy(gameObject);
     }
@@ -271,6 +273,7 @@ public class Splitable : MonoBehaviour {
         plane.Raycast(new Ray(vertices[vertex1], direction), out distance);
         Vector3 newVertice = vertices[vertex1] + distance * direction;
         seamVertices.Add(newVertice);
+        //add second before first because next time we check trackSplitEdges, the second vertex will be the first and vice versa
         trackSplitEdges.Add(vertex2); trackSplitEdges.Add(vertex1); trackSplitEdges.Add(verticesIndex);
         return verticesIndex++;
     }
