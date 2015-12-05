@@ -231,6 +231,12 @@ public class Splitable : MonoBehaviour {
             MeshRenderer mr1 = split1.GetComponent<MeshRenderer>();
             mr1.material = GetComponent<MeshRenderer>().material;
             split1.AddComponent<Splitable>();
+            var convex = new SimpleConvex(mesh1);
+            var simpleMesh1 = convex.BuildSimplifiedConvexMesh();
+            var col1 = split1.AddComponent<MeshCollider>();
+            col1.sharedMesh = simpleMesh1;
+            col1.convex = true;
+            split1.AddComponent<Rigidbody>();
 
             //behind plane
             GameObject split2 = new GameObject();
@@ -248,6 +254,17 @@ public class Splitable : MonoBehaviour {
             MeshRenderer mr2 = split2.GetComponent<MeshRenderer>();
             mr2.material = GetComponent<MeshRenderer>().material;
             split2.AddComponent<Splitable>();
+            convex = new SimpleConvex(mesh2);
+            var simpleMesh2 = convex.BuildSimplifiedConvexMesh();
+            var col2 = split2.AddComponent<MeshCollider>();
+            col2.sharedMesh = simpleMesh2;
+            col2.convex = true;
+            split2.AddComponent<Rigidbody>();
+
+            var go = new GameObject();
+            var filter = go.AddComponent<MeshFilter>();
+            filter.mesh = simpleMesh2;
+            go.AddComponent<MeshRenderer>();
         }
         else return;
         PlaneGenerator.OnGeneration -= split;
