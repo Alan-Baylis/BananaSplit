@@ -61,28 +61,28 @@ public class Splitable : MonoBehaviour {
                     if (side1 == true)
                     {                                       //      vertices[i] /\                  Positive Side
                         posTriangles.Add(vertices[i]);      //                 /  \
-                        posTriangles.Add(vertice1);         //        vertice2/____\vertice1
+                        posTriangles.Add(vertice1);         //        vertice1/____\vertice2
                         posTriangles.Add(vertice2);         //               /   _-'\
-                                                            // vertices[i+2]/_.-'____\vertices[i+1] Negative Side
+                                                            // vertices[i+1]/_.-'____\vertices[i+2] Negative Side
                         negTriangles.Add(vertices[i + 1]);
                         negTriangles.Add(vertices[i + 2]);
-                        negTriangles.Add(vertice1);
+                        negTriangles.Add(vertice2);
 
-                        negTriangles.Add(vertices[i + 2]);
+                        negTriangles.Add(vertices[i + 1]);
                         negTriangles.Add(vertice2);
                         negTriangles.Add(vertice1);
                     }
                     else
                     {                                       //      vertices[i] /\                  Negative Side
                         negTriangles.Add(vertices[i]);      //                 /  \
-                        negTriangles.Add(vertice1);         //        vertice2/____\vertice1
+                        negTriangles.Add(vertice1);         //        vertice1/____\vertice2
                         negTriangles.Add(vertice2);         //               /   _-'\
-                                                            // vertices[i+2]/_.-'____\vertices[i+1] Positive Side
+                                                            // vertices[i+1]/_.-'____\vertices[i+2] Positive Side
                         posTriangles.Add(vertices[i + 1]);
                         posTriangles.Add(vertices[i + 2]);
-                        posTriangles.Add(vertice1);
+                        posTriangles.Add(vertice2);
 
-                        posTriangles.Add(vertices[i + 2]);
+                        posTriangles.Add(vertices[i + 1]);
                         posTriangles.Add(vertice2);
                         posTriangles.Add(vertice1);
                     }
@@ -94,28 +94,28 @@ public class Splitable : MonoBehaviour {
                     if (side2 == true)
                     {                                       //    vertices[i+1] /\                  Positive Side
                         posTriangles.Add(vertices[i + 1]);  //                 /  \
-                        posTriangles.Add(vertice1);         //        vertice2/____\vertice1
+                        posTriangles.Add(vertice1);         //        vertice1/____\vertice2
                         posTriangles.Add(vertice2);         //               /   _-'\
-                                                            //   vertices[i]/_.-'____\vertices[i+2] Negative Side
+                                                            // vertices[i+2]/_.-'____\vertices[i]   Negative Side
                         negTriangles.Add(vertices[i + 2]);
                         negTriangles.Add(vertices[i]);
-                        negTriangles.Add(vertice1);
+                        negTriangles.Add(vertice2);
 
-                        negTriangles.Add(vertices[i]);
+                        negTriangles.Add(vertices[i+2]);
                         negTriangles.Add(vertice2);
                         negTriangles.Add(vertice1);
                     }
                     else
                     {                                       //    vertices[i+1] /\                  Negative Side
                         negTriangles.Add(vertices[i + 1]);  //                 /  \
-                        negTriangles.Add(vertice1);         //        vertice2/____\vertice1
+                        negTriangles.Add(vertice1);         //        vertice1/____\vertice2
                         negTriangles.Add(vertice2);         //               /   _-'\
-                                                            //   vertices[i]/_.-'____\vertices[i+2] Positive Side
+                                                            // vertices[i+2]/_.-'____\vertices[i]   Positive Side
                         posTriangles.Add(vertices[i + 2]);
                         posTriangles.Add(vertices[i]);
-                        posTriangles.Add(vertice1);
+                        posTriangles.Add(vertice2);
 
-                        posTriangles.Add(vertices[i]);
+                        posTriangles.Add(vertices[i+2]);
                         posTriangles.Add(vertice2);
                         posTriangles.Add(vertice1);
                     }
@@ -127,32 +127,49 @@ public class Splitable : MonoBehaviour {
                     if (side2 == true)
                     {                                       //    vertices[i+2] /\                  Positive Side
                         posTriangles.Add(vertices[i + 2]);  //                 /  \
-                        posTriangles.Add(vertice1);         //        vertice2/____\vertice1
+                        posTriangles.Add(vertice1);         //        vertice1/____\vertice2
                         posTriangles.Add(vertice2);         //               /   _-'\
-                                                            // vertices[i+1]/_.-'____\vertices[i] Negative Side
+                                                            //   vertices[i]/_.-'____\vertices[i+2] Negative Side
                         negTriangles.Add(vertices[i]);
-                        negTriangles.Add(vertices[i + 1]);
-                        negTriangles.Add(vertice1);
+                        negTriangles.Add(vertices[i + 2]);
+                        negTriangles.Add(vertice2);
 
-                        negTriangles.Add(vertices[i + 1]);
+                        negTriangles.Add(vertices[i]);
                         negTriangles.Add(vertice2);
                         negTriangles.Add(vertice1);
                     }
                     else
                     {                                       //    vertices[i+2] /\                  Negative Side
                         negTriangles.Add(vertices[i + 2]);  //                 /  \
-                        negTriangles.Add(vertice1);         //        vertice2/____\vertice1
+                        negTriangles.Add(vertice1);         //        vertice1/____\vertice2
                         negTriangles.Add(vertice2);         //               /   _-'\
-                                                            // vertices[i+1]/_.-'____\vertices[i] Positive Side
+                                                            //   vertices[i]/_.-'____\vertices[i+1] Positive Side
                         posTriangles.Add(vertices[i]);
                         posTriangles.Add(vertices[i + 1]);
-                        posTriangles.Add(vertice1);
+                        posTriangles.Add(vertice2);
 
-                        posTriangles.Add(vertices[i + 1]);
+                        posTriangles.Add(vertices[i]);
                         posTriangles.Add(vertice2);
                         posTriangles.Add(vertice1);
                     }
                 }
+                //now average all seam vertices to find center of inner face
+                float x = 0;
+                float y = 0;
+                float z = 0;
+                int n = seamVertices.Count;
+                for (int j = 0; j < n; j++)
+                {
+                    Vector3 current = (Vector3)seamVertices[j];
+                    x += current.x;
+                    y += current.y;
+                    z += current.z;
+                }
+                Vector3 center = new Vector3(x / n, y / n, z / n);
+                int index = verticesIndex++;
+                seamVertices.Add(center);
+                //Now create triangle interior triangles
+
             }
         }    
     }
