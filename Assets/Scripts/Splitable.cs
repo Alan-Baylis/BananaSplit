@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class Splitable : MonoBehaviour
 {
+	private bool splitting = false;
+
     private Mesh mesh;
     new private Transform transform;
     private Vector3[] vertices;
@@ -28,8 +30,11 @@ public class Splitable : MonoBehaviour
         triangles = mesh.triangles;
     }
 
-    private void Split(Plane worldPlane)
+    private void Split(Plane worldPlane, Vector3 lineStart, Vector3 lineEnd, int casts)
     {
+		if (!splitting)
+			return;
+
         float distance = worldPlane.GetDistanceToPoint(transform.position);
 
         if (distance > 2.0f)
@@ -224,6 +229,7 @@ public class Splitable : MonoBehaviour
             return;
         }
 
+		splitting = false;
         PlaneGenerator.OnGeneration -= Split;
         Destroy(gameObject);
     }
@@ -280,4 +286,8 @@ public class Splitable : MonoBehaviour
         trackSplitEdges.Add(vertex2); trackSplitEdges.Add(vertex1); trackSplitEdges.Add(verticesIndex);
         return verticesIndex++;
     }
+
+	void HitByRay(){
+		splitting = true;
+	}
 }

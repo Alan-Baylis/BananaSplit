@@ -2,8 +2,8 @@
 
 public class PlaneGenerator : MonoBehaviour
 {
-
-    public delegate void Generate(Plane plane);
+	public int casts;
+    public delegate void Generate(Plane plane, Vector3 start, Vector3 end, int casts);
     public static event Generate OnGeneration;
 
     public bool showDrawnLines;
@@ -85,7 +85,19 @@ public class PlaneGenerator : MonoBehaviour
             test();
         }
 
-        OnGeneration(plane);
+		Vector3 line = endPoint - startPoint;
+		line = line / casts;
+		for (int i = 0; i < casts; i++) {
+			RaycastHit hit;
+			Vector3 castPoint = startPoint + i*line;
+			Vector3 direction = castPoint - Camera.main.transform.position;
+
+			if (Physics.Raycast(Camera.main.transform.position, direction, out hit)){
+				hit.transform.SendMessage("HitByRay");
+			}
+		}
+
+        OnGeneration(plane, startPoint, endPoint, casts);
     }
 
     void test()
