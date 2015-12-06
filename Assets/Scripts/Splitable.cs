@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class Splitable : MonoBehaviour
 {
+    public Material innerMaterial;
+
 	private bool splitting = false;
 
     private Mesh mesh;
@@ -291,12 +293,13 @@ public class Splitable : MonoBehaviour
         var rend = split.AddComponent<MeshRenderer>();
         Material[] materials = new Material[2]{
             GetComponent<MeshRenderer>().material,
-            GetComponent<MeshRenderer>().material
+            innerMaterial
         };
         rend.materials = materials;
         //rend.material = GetComponent<MeshRenderer>().material;
 
         split.AddComponent<Splitable>();
+        split.GetComponent<Splitable>().innerMaterial = innerMaterial;
 
         var convex = new SimpleConvex(mesh);
         var simpleMesh1 = convex.BuildSimplifiedConvexMesh();
