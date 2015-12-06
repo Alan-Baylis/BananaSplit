@@ -7,6 +7,10 @@ public class Splitable : MonoBehaviour
 
 	private bool splitting = false;
 
+    public delegate void SplitEvent();
+    public static event SplitEvent OnSplit;
+    public bool FireSplitEvent { get; private set; }
+
     private Mesh mesh;
     new private Transform transform;
     private Vector3[] vertices;
@@ -259,6 +263,8 @@ public class Splitable : MonoBehaviour
             Vector3 force = plane.normal * 50f;
             CreateNewSplit(doneVertices, posTriangles.ToArray(), posInnerTriangles.ToArray(), uvs, posNormals.ToArray(), force);
             CreateNewSplit(doneVertices, negTriangles.ToArray(), negInnerTriangles.ToArray(), uvs, negNormals.ToArray(), -force);
+            if (FireSplitEvent && OnSplit != null)
+                OnSplit();
         }
         else
         {
@@ -298,8 +304,9 @@ public class Splitable : MonoBehaviour
         rend.materials = materials;
         //rend.material = GetComponent<MeshRenderer>().material;
 
-        split.AddComponent<Splitable>();
-        split.GetComponent<Splitable>().innerMaterial = innerMaterial;
+        var splittable = split.AddComponent<Splitable>();
+        splittable.innerMaterial = innerMaterial;
+        splittable.FireSplitEvent = false;
 
         var convex = new SimpleConvex(mesh);
         var simpleMesh1 = convex.BuildSimplifiedConvexMesh();
