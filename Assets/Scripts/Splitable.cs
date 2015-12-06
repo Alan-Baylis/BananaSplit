@@ -254,8 +254,9 @@ public class Splitable : MonoBehaviour
 
         if (posTriangles.Count != 0 && negTriangles.Count != 0)//dont bother creating a gameobject if there are no triangles
         {
-            CreateNewSplit(doneVertices, posTriangles.ToArray(), posInnerTriangles.ToArray(), uvs, posNormals.ToArray());
-            CreateNewSplit(doneVertices, negTriangles.ToArray(), negInnerTriangles.ToArray(), uvs, negNormals.ToArray());
+            Vector3 force = plane.normal * 50f;
+            CreateNewSplit(doneVertices, posTriangles.ToArray(), posInnerTriangles.ToArray(), uvs, posNormals.ToArray(), force);
+            CreateNewSplit(doneVertices, negTriangles.ToArray(), negInnerTriangles.ToArray(), uvs, negNormals.ToArray(), -force);
         }
         else
         {
@@ -267,7 +268,7 @@ public class Splitable : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void CreateNewSplit(Vector3[] verts, int[] tris, int[] innerTris, Vector2[] uvs, Vector3[] normals)
+    void CreateNewSplit(Vector3[] verts, int[] tris, int[] innerTris, Vector2[] uvs, Vector3[] normals, Vector3 force)
     {
         var split = new GameObject();
         split.transform.position = transform.position;
@@ -303,7 +304,8 @@ public class Splitable : MonoBehaviour
         collider.sharedMesh = simpleMesh1;
         collider.convex = true;
 
-        split.AddComponent<Rigidbody>();
+        var rigidBody = split.AddComponent<Rigidbody>();
+        rigidBody.AddForce(force);
         /*split.GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity;*/
     }
 
