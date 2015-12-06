@@ -24,6 +24,7 @@ public class PlaneGenerator : MonoBehaviour
 
     private Renderer rend;
 
+
     // Use this for initialization
     void Start()
     {
@@ -33,9 +34,9 @@ public class PlaneGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (MenuController.Paused)
-            return;
-
+        if (MenuController.Paused) {
+			return;
+		}
         if (Input.GetMouseButtonDown(0))
         {
             startPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane + 0.5f);
@@ -67,6 +68,13 @@ public class PlaneGenerator : MonoBehaviour
             endPoint = startPoint;
             rend.enabled = false;
         }
+
+		if (Input.GetKey (KeyCode.R)) {
+			Transform splitables = GameObject.Find("Splitables").transform;
+			foreach (Transform child in splitables){
+				Destroy(child.gameObject);
+			}
+		}
     }
 
     void createPlane()
@@ -95,7 +103,10 @@ public class PlaneGenerator : MonoBehaviour
 			Vector3 castPoint = startPoint + i*line;
 			Vector3 direction = castPoint - Camera.main.transform.position;
 
-			if (Physics.Raycast(Camera.main.transform.position, direction, out hit)){
+			int layerMask = ~(1 << 8);
+			if (Physics.Raycast(Camera.main.transform.position, direction, out hit,1000,layerMask)){
+
+
                 hit.transform.SendMessage("HitByRay");
             }
 		}
@@ -115,4 +126,13 @@ public class PlaneGenerator : MonoBehaviour
         Debug.Log(plane.SameSide(pt1, pt2));
     }
 
+	void enable(){
+		this.enabled = true;
+		startPoint = endPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane + 0.5f);
+		startPoint = endPoint = Camera.main.ScreenToWorldPoint(startPoint);
+	}
+
+	void disable(){
+		this.enabled = false;
+	}
 }
