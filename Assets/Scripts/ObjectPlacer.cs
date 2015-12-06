@@ -58,6 +58,9 @@ public class ObjectPlacer : MonoBehaviour {
 			obj.transform.position = transform.position + new Vector3(0, 2, 0);
 			obj.AddComponent<Splitable>();
 			obj.AddComponent<Rigidbody>();
+
+			GameObject parent = GameObject.Find("Splitables");
+			obj.transform.parent = parent.transform;
 			dd.value = 0;
 			disable ();
 		}
