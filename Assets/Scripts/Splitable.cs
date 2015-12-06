@@ -50,6 +50,11 @@ public class Splitable : MonoBehaviour
 		if (!splitting)
 			return;
 
+        // Sometimes there is null here
+        // Too lazy to find real reason right now
+        if (transform == null)
+            return;
+
         float distance = worldPlane.GetDistanceToPoint(transform.position);
 
         if (distance > 2.0f)
@@ -263,7 +268,7 @@ public class Splitable : MonoBehaviour
             Vector3 force = plane.normal * 50f;
             CreateNewSplit(doneVertices, posTriangles.ToArray(), posInnerTriangles.ToArray(), uvs, posNormals.ToArray(), force);
             CreateNewSplit(doneVertices, negTriangles.ToArray(), negInnerTriangles.ToArray(), uvs, negNormals.ToArray(), -force);
-            if (FireSplitEvent && OnSplit != null)
+            if (OnSplit != null)
                 OnSplit();
         }
         else

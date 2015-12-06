@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +14,12 @@ public class GameManager : MonoBehaviour
     private float _spawnTime = 5f;
     [SerializeField]
     private float _spawnSize = 10f;
+    [SerializeField]
+    private GameObject _gameOverGo = null;
+    [SerializeField]
+    private GameObject[] _lifeGos = null;
+    [SerializeField]
+    private Text _scoreText = null;
 
     public static GameManager Instance { get; set; }
 
@@ -85,14 +92,28 @@ public class GameManager : MonoBehaviour
     private void SplitOccured()
     {
         _numSplits++;
+        _scoreText.text = _numSplits.ToString();
     }
 
     private void FruitDropped()
     {
         _numDropped++;
+
+        // Find the first non active game object
+        // and set it active
+        foreach (var go in _lifeGos)
+        {
+            if (!go.activeSelf)
+            {
+                go.SetActive(true);
+                break;
+            }
+        }
+
         if (_numDropped == _maxNumDrops)
         {
             _gameRunning = false;
+            _gameOverGo.SetActive(true);
         }
     }
 
