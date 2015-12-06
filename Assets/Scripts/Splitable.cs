@@ -15,6 +15,8 @@ public class Splitable : MonoBehaviour
 
     private List<int> posTriangles = new List<int>();
     private List<int> negTriangles = new List<int>();
+    private List<int> posInnerTriangles = new List<int>();
+    private List<int> negInnerTriangles = new List<int>();
 
     private List<Vector3> posNormals = new List<Vector3>();
     private List<Vector3> negNormals = new List<Vector3>();
@@ -183,7 +185,30 @@ public class Splitable : MonoBehaviour
                         posTriangles.Add(vertex1 + 1);
                     }
                 }
+
                 if (odd == true)
+                {
+                    //add inner triangles
+                    posInnerTriangles.Add(vertex1 + 2);
+                    posInnerTriangles.Add(0);
+                    posInnerTriangles.Add(vertex2 + 2);
+
+                    negInnerTriangles.Add(vertex1 + 2);
+                    negInnerTriangles.Add(vertex2 + 2);
+                    negInnerTriangles.Add(0);
+                }
+                else
+                {
+                    negInnerTriangles.Add(vertex1 + 2);
+                    negInnerTriangles.Add(0);
+                    negInnerTriangles.Add(vertex2 + 2);
+
+                    posInnerTriangles.Add(vertex1 + 2);
+                    posInnerTriangles.Add(vertex2 + 2);
+                    posInnerTriangles.Add(0);
+                }
+
+                /*if (odd == true)
                 {
                     //add inner triangles
                     posTriangles.Add(vertex1 + 1);
@@ -203,7 +228,7 @@ public class Splitable : MonoBehaviour
                     posTriangles.Add(vertex1 + 1);
                     posTriangles.Add(vertex2 + 1);
                     posTriangles.Add(0);
-                }
+                }*/
             }
         }
         //now average all seam vertices to find center of inner face
@@ -229,8 +254,8 @@ public class Splitable : MonoBehaviour
 
         if (posTriangles.Count != 0 && negTriangles.Count != 0)//dont bother creating a gameobject if there are no triangles
         {
-            CreateNewSplit(doneVertices, posTriangles.ToArray(), uvs, posNormals.ToArray());
-            CreateNewSplit(doneVertices, negTriangles.ToArray(), uvs, negNormals.ToArray());
+            CreateNewSplit(doneVertices, posTriangles.ToArray(), posInnerTriangles.ToArray(), uvs, posNormals.ToArray());
+            CreateNewSplit(doneVertices, negTriangles.ToArray(), negInnerTriangles.ToArray(), uvs, negNormals.ToArray());
         }
         else
         {
@@ -242,7 +267,7 @@ public class Splitable : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void CreateNewSplit(Vector3[] verts, int[] tris, Vector2[] uvs, Vector3[] normals)
+    void CreateNewSplit(Vector3[] verts, int[] tris, int[] innerTris, Vector2[] uvs, Vector3[] normals)
     {
         var split = new GameObject();
         split.transform.position = transform.position;
@@ -252,6 +277,8 @@ public class Splitable : MonoBehaviour
         Mesh mesh = new Mesh();
         mesh.vertices = verts;
         mesh.triangles = tris;
+        mesh.subMeshCount += 1;
+        mesh.SetTriangles(innerTris, 1);
         mesh.uv = uvs;
         //mesh.RecalculateNormals();
         mesh.normals = normals;
@@ -261,7 +288,12 @@ public class Splitable : MonoBehaviour
         split.AddComponent<MeshFilter>().mesh = mesh;
 
         var rend = split.AddComponent<MeshRenderer>();
-        rend.material = GetComponent<MeshRenderer>().material;
+        Material[] materials = new Material[2]{
+            GetComponent<MeshRenderer>().material,
+            GetComponent<MeshRenderer>().material
+        };
+        rend.materials = materials;
+        //rend.material = GetComponent<MeshRenderer>().material;
 
         split.AddComponent<Splitable>();
 
@@ -293,23 +325,29 @@ public class Splitable : MonoBehaviour
         plane.Raycast(new Ray(vertices[vertex1], direction), out distance);
         Vector3 newVertex = vertices[vertex1] + distance * direction;
         seamVertices.Add(newVertex);
+        seamVertices.Add(newVertex);//double vertices so that the inner submesh can have a separate normal
 
         //generate new uv coordinates
         Vector2 uv1 = uv[vertex1 + 1];
         Vector2 uv2 = uv[vertex2 + 1];
         Vector2 uv3 = Vector2.Lerp(uv1, uv2, distance / Vector3.Distance(vertices[vertex2], vertices[vertex1]));
         uv.Add(uv3);
+        uv.Add(new Vector2(newVertex.x, newVertex.z));// add uv for inner submesh vertices
 
         //generate new normals
         Vector3 normal1 = posNormals[vertex1 + 1];
         Vector3 normal2 = posNormals[vertex2 + 1];
         Vector3 normal3 = Vector3.Lerp(normal1, normal2, distance / Vector3.Distance(vertices[vertex2], vertices[vertex1]));
         posNormals.Add(normal3);
+        posNormals.Add(posNormals[0]);//add normal for inner submesh vertices
         negNormals.Add(normal3);
+        negNormals.Add(negNormals[0]);
 
         //add second before first because next time we check trackSplitEdges, the second vertex will be the first and vice versa
         trackSplitEdges.Add(vertex2); trackSplitEdges.Add(vertex1); trackSplitEdges.Add(verticesIndex);
-        return verticesIndex++;
+
+        verticesIndex += 2;
+        return verticesIndex - 2;
     }
 
 	void HitByRay(){
