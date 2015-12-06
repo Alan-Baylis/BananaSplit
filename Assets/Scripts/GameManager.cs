@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
         }
 
         _isRealInstance = true;
+        Instance = this;
 
         Splitable.OnSplit += SplitOccured;
         DeathTrigger.OnDeathTrigger += FruitDropped;
