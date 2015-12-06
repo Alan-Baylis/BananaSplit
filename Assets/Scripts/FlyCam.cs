@@ -33,10 +33,12 @@ public class FlyCam : MonoBehaviour
     private void Update()
     {
         UpdateKeys();
-
+		if (!Input.GetMouseButton (0)) 
+		{
+			UpdatePosition ();
+		}
         if (_lookEnabled)
         {
-            UpdatePosition();
             UpdateLook();
         }
     }
