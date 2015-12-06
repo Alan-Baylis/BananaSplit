@@ -93,11 +93,12 @@ public class PlaneGenerator : MonoBehaviour
 			Vector3 direction = castPoint - Camera.main.transform.position;
 
 			if (Physics.Raycast(Camera.main.transform.position, direction, out hit)){
-				hit.transform.SendMessage("HitByRay");
-			}
+                hit.transform.SendMessage("HitByRay");
+            }
 		}
 
-        OnGeneration(plane, startPoint, endPoint, casts);
+        if (OnGeneration != null)
+            OnGeneration(plane, startPoint, endPoint, casts);
     }
 
     void test()
