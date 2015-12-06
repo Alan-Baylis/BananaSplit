@@ -9,7 +9,7 @@ public class Splitable : MonoBehaviour
 
     public delegate void SplitEvent();
     public static event SplitEvent OnSplit;
-    public bool FireSplitEvent { get; private set; }
+    public bool FireSplitEvent { get; set; }
 
     private Mesh mesh;
     new private Transform transform;

@@ -4,6 +4,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
+    private int _maxNumDrops = 3;
+    [SerializeField]
     private Transform _splittableParent = null;
     [SerializeField]
     private GameObject[] _fruitPrefabs = null;
@@ -43,6 +45,10 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(_spawnTime);
 
+            // Make sure we didnt lose during the wait
+            if (!_gameRunning)
+                break;
+
             int idx = Random.Range(0, _fruitPrefabs.Length);
             var go = Instantiate(_fruitPrefabs[idx]);
 
@@ -55,9 +61,12 @@ public class GameManager : MonoBehaviour
             trans.parent = _splittableParent;
             trans.rotation = Random.rotation;
 
-            var impulse = Random.onUnitSphere;
+            var impulse = Random.onUnitSphere * Random.Range(1f, 4f);
             var body = go.GetComponent<Rigidbody>();
             body.angularVelocity = impulse;
+
+            var split = go.GetComponent<Splitable>();
+            split.FireSplitEvent = true;
         }
     }
 
@@ -69,5 +78,10 @@ public class GameManager : MonoBehaviour
     private void FruitDropped()
     {
         _numDropped++;
+        if (_numDropped == _maxNumDrops)
+        {
+            _gameRunning = false;
+            Debug.Log("You lose");
+        }
     }
 }
