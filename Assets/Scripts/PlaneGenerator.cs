@@ -104,8 +104,7 @@ public class PlaneGenerator : MonoBehaviour
             OnGeneration(plane, startPoint, endPoint, casts);
 
         var sm = SoundManager.Instance;
-        if (sm != null)
-            sm.Play(sm.Swoosh);
+        sm.Play(sm.Swoosh);
     }
 
     void test()
