@@ -49,7 +49,7 @@ public class Splitable : MonoBehaviour
 
         Plane plane = new Plane();
         Vector3 newNormal = transform.rotation * worldPlane.normal;
-        plane.SetNormalAndPosition(worldPlane.normal, newNormal * distance);//ignores model rotation
+        plane.SetNormalAndPosition(newNormal, worldPlane.normal * distance);
 
         posNormals.Add(-newNormal);
         negNormals.Add(newNormal);
@@ -272,6 +272,7 @@ public class Splitable : MonoBehaviour
         collider.convex = true;
 
         split.AddComponent<Rigidbody>();
+        /*split.GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity;*/
     }
 
     int findNewVertex(int vertex1, int vertex2, Plane plane)//returns index of new vertex, creates new vertex if it doesnt already exist
