@@ -15,10 +15,13 @@ public class GameManager : MonoBehaviour
     private float _spawnSize = 10f;
 
     public static GameManager Instance { get; set; }
+
     private bool _gameRunning = true;
 
     private int _numSplits = 0;
     private int _numDropped = 0;
+
+    private bool _isRealInstance = false;
 
     private void Start()
     {
@@ -28,15 +31,23 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        _isRealInstance = true;
+
         Splitable.OnSplit += SplitOccured;
         DeathTrigger.OnDeathTrigger += FruitDropped;
+        MenuController.PauseStateChanged += OnPause;
 
         StartCoroutine(SpawnCoroutine());
     }
 
     private void OnDestroy()
     {
+        if (_isRealInstance)
+            Instance = null;
+
         Splitable.OnSplit -= SplitOccured;
+        DeathTrigger.OnDeathTrigger -= FruitDropped;
+        MenuController.PauseStateChanged -= OnPause;
     }
 
     private IEnumerator SpawnCoroutine()
@@ -45,7 +56,7 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(_spawnTime);
 
-            // Make sure we didnt lose during the wait
+            // Make sure we didn't lose during the wait
             if (!_gameRunning)
                 break;
 
@@ -81,7 +92,11 @@ public class GameManager : MonoBehaviour
         if (_numDropped == _maxNumDrops)
         {
             _gameRunning = false;
-            Debug.Log("You lose");
         }
+    }
+
+    private void OnPause(bool pasued)
+    {
+
     }
 }

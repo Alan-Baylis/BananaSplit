@@ -33,6 +33,9 @@ public class PlaneGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (MenuController.Paused)
+            return;
+
         if (Input.GetMouseButtonDown(0))
         {
             startPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane + 0.5f);
