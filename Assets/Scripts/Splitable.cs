@@ -50,7 +50,7 @@ public class Splitable : MonoBehaviour
             return;//arbitrary value
 
         Plane plane = new Plane();
-        Vector3 newNormal = transform.rotation * worldPlane.normal;
+        Vector3 newNormal = Quaternion.Inverse(transform.rotation) * worldPlane.normal;
         plane.SetNormalAndPosition(newNormal, worldPlane.normal * distance);
 
         posNormals.Add(-newNormal);
