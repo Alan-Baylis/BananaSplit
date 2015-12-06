@@ -91,6 +91,8 @@ public class PlaneGenerator : MonoBehaviour
         d = -normal.x * endPoint.x - normal.y * endPoint.y - normal.z * endPoint.z;
 
         plane = new Plane(normal, d);
+        
+
         if (debug)
         {
             test();

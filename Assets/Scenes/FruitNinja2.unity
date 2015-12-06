@@ -1190,7 +1190,7 @@ GameObject:
   - 4: {fileID: 973337994}
   - 65: {fileID: 973337993}
   - 114: {fileID: 973337995}
-  m_Layer: 2
+  m_Layer: 8
   m_Name: Death Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -57,9 +57,6 @@ public class Splitable : MonoBehaviour
 
         float distance = worldPlane.GetDistanceToPoint(transform.position);
 
-        if (distance > 2.0f)
-            return;//arbitrary value
-
         Plane plane = new Plane();
         Vector3 newNormal = Quaternion.Inverse(transform.rotation) * worldPlane.normal;
         plane.SetNormalAndPosition(newNormal, transform.rotation * worldPlane.normal * distance);
@@ -286,6 +283,7 @@ public class Splitable : MonoBehaviour
         var split = new GameObject();
         split.transform.position = transform.position;
         split.transform.rotation = transform.rotation;
+        split.transform.localScale = transform.localScale;
         split.transform.parent = transform.parent;
 
         Mesh mesh = new Mesh();
