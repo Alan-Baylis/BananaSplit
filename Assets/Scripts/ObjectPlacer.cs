@@ -57,6 +57,7 @@ public class ObjectPlacer : MonoBehaviour {
 			}
 			obj.transform.position = transform.position + new Vector3(0, 2, 0);
 			obj.AddComponent<Splitable>();
+            obj.GetComponent<Splitable>().innerMaterial = obj.GetComponent<MeshRenderer>().material;
 			obj.AddComponent<Rigidbody>();
 
 			GameObject parent = GameObject.Find("Splitables");
