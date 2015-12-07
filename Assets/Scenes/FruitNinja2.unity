@@ -1682,7 +1682,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6eb2b115e4599e641b7ff1c20faf6a9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Swoosh: {fileID: 0}
+  Swoosh: {fileID: 8300000, guid: b24e19e1116e5fb4ead9a78f76d92ee3, type: 3}
 --- !u!4 &1401291378
 Transform:
   m_ObjectHideFlags: 0
