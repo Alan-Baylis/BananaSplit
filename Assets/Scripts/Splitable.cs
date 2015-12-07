@@ -56,10 +56,12 @@ public class Splitable : MonoBehaviour
             return;
 
         float distance = worldPlane.GetDistanceToPoint(transform.position);
+        
 
         Plane plane = new Plane();
-        Vector3 newNormal = Quaternion.Inverse(transform.rotation) * worldPlane.normal;
-        plane.SetNormalAndPosition(newNormal, transform.rotation * worldPlane.normal * distance * -1);
+        Vector3 newNormal = transform.InverseTransformDirection(worldPlane.normal);
+        //Vector3 newNormal = Quaternion.Inverse(transform.rotation) * worldPlane.normal;
+        plane.SetNormalAndPosition(newNormal, newNormal * -distance);
 
         posNormals.Add(-newNormal);
         negNormals.Add(newNormal);
