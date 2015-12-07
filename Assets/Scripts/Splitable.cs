@@ -59,7 +59,7 @@ public class Splitable : MonoBehaviour
 
         Plane plane = new Plane();
         Vector3 newNormal = Quaternion.Inverse(transform.rotation) * worldPlane.normal;
-        plane.SetNormalAndPosition(newNormal, transform.rotation * worldPlane.normal * distance);
+        plane.SetNormalAndPosition(newNormal, transform.rotation * worldPlane.normal * distance * -1);
 
         posNormals.Add(-newNormal);
         negNormals.Add(newNormal);
