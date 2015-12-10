@@ -1,0 +1,112 @@
+Initialize engine version: 5.3.0f4 (2524e04062b4)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: AMD RADEON HD 6450 (ID=0x6779)
+    Vendor:   ATI
+    VRAM:     1010 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+- Completed reload, in  0.054 seconds
+Platform assembly: C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\aiden\BananaSplit\Build\BananaSplit_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1080 60Hz; virtual: 3840x1080 at -1920,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 0.666793 ms
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 6878 -> priority: 1 
+Mesh.normals is out of bounds. The supplied array needs to be the same size as the Mesh.vertices array.
+ 
+(Filename:  Line: 893)
+
+Mesh.normals is out of bounds. The supplied array needs to be the same size as the Mesh.vertices array.
+ 
+(Filename:  Line: 893)
+
+ArgumentOutOfRangeException: Argument is out of range.
+Parameter name: index
+  at System.Collections.Generic.List`1[UnityEngine.Vector3].get_Item (Int32 index) [0x00000] in <filename unknown>:0 
+  at Splitable.findNewVertex (Int32 vertex1, Int32 vertex2, Plane plane) [0x00000] in <filename unknown>:0 
+  at Splitable.Split (Plane worldPlane, Vector3 lineStart, Vector3 lineEnd, Int32 casts) [0x00000] in <filename unknown>:0 
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at (wrapper delegate-invoke) PlaneGenerator/Generate:invoke_void__this___Plane_Vector3_Vector3_int (UnityEngine.Plane,UnityEngine.Vector3,UnityEngine.Vector3,int)
+  at PlaneGenerator.createPlane () [0x00000] in <filename unknown>:0 
+  at PlaneGenerator.Update () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Mesh.normals is out of bounds. The supplied array needs to be the same size as the Mesh.vertices array.
+ 
+(Filename:  Line: 893)
+
+Failed getting triangles. Submesh 1 has no indices. Mesh asset path "" Mesh name ""
+ 
+(Filename:  Line: 77)
+
+Failed getting triangles. Submesh 1 has no indices. Mesh asset path "" Mesh name ""
+ 
+(Filename:  Line: 77)
+
+Mesh.normals is out of bounds. The supplied array needs to be the same size as the Mesh.vertices array.
+ 
+(Filename:  Line: 893)
+
+Failed getting triangles. Submesh 1 has no indices. Mesh asset path "" Mesh name ""
+ 
+(Filename:  Line: 77)
+
+Failed getting triangles. Submesh 1 has no indices. Mesh asset path "" Mesh name ""
+ 
+(Filename:  Line: 77)
+
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 2.539349 ms
+
+Unloading 165 unused Assets to reduce memory usage. Loaded Objects now: 368.
+Total: 0.703491 ms (FindLiveObjects: 0.034832 ms CreateObjectMapping: 0.018038 ms MarkObjects: 0.283013 ms  DeleteObjects: 0.367296 ms)
+
+ConvexHullBuilder: convex hull has more than 255 polygons!
+ 
+(Filename: ..\..\PhysXCooking\src\convex\ConvexHullBuilder.cpp Line: 1486)
+
+Gu::ConvexMesh::loadConvexHull: convex hull init failed! Try to use the PxConvexFlag::eINFLATE_CONVEX flag. (see PxToolkit::createConvexMeshSafe)
+ 
+(Filename: ..\..\PhysXCooking\src\convex\ConvexMeshBuilder.cpp Line: 266)
+
+ConvexHullBuilder: convex hull has more than 255 polygons!
+ 
+(Filename: ..\..\PhysXCooking\src\convex\ConvexHullBuilder.cpp Line: 1486)
+
+Gu::ConvexMesh::loadConvexHull: convex hull init failed! Try to use the PxConvexFlag::eINFLATE_CONVEX flag. (see PxToolkit::createConvexMeshSafe)
+ 
+(Filename: ..\..\PhysXCooking\src\convex\ConvexMeshBuilder.cpp Line: 266)
+
